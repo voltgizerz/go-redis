@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -13,7 +13,7 @@ type Redis struct {
 
 func InitRedis() Redis {
 	client := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_ADDR"),
+		Addr: os.Getenv("REDIS_ADDR"),
 	})
 	return Redis{client}
 }

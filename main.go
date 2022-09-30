@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
+	"github.com/voltgizerz/go-redis/config"
+	"github.com/voltgizerz/go-redis/service"
 )
 
 func main() {
@@ -14,12 +16,9 @@ func main() {
 	log.Println("===Start Redis Go Client===")
 
 	// init redis
-	redis := InitRedis()
-	defer redis.Close()
+	redis := config.InitRedis()
 
-	example := "felix_key_example"
-	redis.Set(example, "felix-test-value-this-is-a-value")
+	bookService := service.NewBookService(redis)
 
-	data := redis.Get(example)
-	log.Println("Data fetch from redis:", data)
+	bookService.ReadBook()
 }
