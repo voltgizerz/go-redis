@@ -25,10 +25,10 @@ func (b *Book) ReadBook() {
 	data := b.Redis.Get(REDIS_BOOK_KEY)
 	if data != "" {
 		log.Println("Data fetch from redis:", data)
-	} else {
-		time.Sleep(1 * time.Minute)
-		b.Redis.Set(REDIS_BOOK_KEY, generate(256))
-	}
+		return
+	} 
+	time.Sleep(1 * time.Minute)
+	b.Redis.Set(REDIS_BOOK_KEY, generate(256))
 	log.Println("Finished Read Book!")
 }
 
