@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -15,7 +16,10 @@ func InitRedis() Redis {
 	client := redis.NewClient(&redis.Options{
 		Addr: os.Getenv("REDIS_ADDR"),
 	})
-	return Redis{client}
+
+	return Redis{
+		client: client,
+	}
 }
 
 func (r Redis) Close() {
@@ -31,7 +35,8 @@ func (r Redis) Ping() {
 }
 
 func (r Redis) Set(key, value string) {
-	err := r.client.Set(key, value, 0).Err()
+	expireTime := 5 * time.Minute
+	err := r.client.Set(key, value, expireTime).Err()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +46,8 @@ func (r Redis) Set(key, value string) {
 func (r Redis) Get(key string) string {
 	val, err := r.client.Get(key).Result()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("data not found on redis with key: " + key)
+		return ""
 	}
 	log.Println("Getting value for key:", key, "value:", val)
 	return val
