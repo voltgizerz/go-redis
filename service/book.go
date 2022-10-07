@@ -2,9 +2,10 @@ package service
 
 import (
 	"crypto/rand"
-	log "github.com/sirupsen/logrus"
 	"time"
 	"unsafe"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/voltgizerz/go-redis/config"
 )
@@ -26,6 +27,8 @@ func NewBookService(redis config.RedisInterface) BookInterface {
 }
 
 func (b Book) ReadBook() {
+	defer b.Redis.Close()
+	
 	data := b.Redis.Get(REDIS_BOOK_KEY)
 	if data != "" {
 		log.Println("Data fetch from redis:", data)

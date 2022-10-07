@@ -19,7 +19,6 @@ func main() {
 	redis := config.InitRedis()
 
 	bookService := service.NewBookService(redis)
-	
 
 	bookService.ReadBook()
 }
