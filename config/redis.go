@@ -1,18 +1,26 @@
 package config
 
 import (
-	"log"
 	"os"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/go-redis/redis"
 )
+
+type RedisInterface interface {
+	Ping()
+	Set(key, value string)
+	Get(key string) string
+	Close()
+}
 
 type Redis struct {
 	client *redis.Client
 }
 
-func InitRedis() Redis {
+func InitRedis() RedisInterface {
 	client := redis.NewClient(&redis.Options{
 		Addr: os.Getenv("REDIS_ADDR"),
 	})
@@ -49,6 +57,6 @@ func (r Redis) Get(key string) string {
 		log.Println("data not found on redis with key: " + key)
 		return ""
 	}
-	log.Println("Getting value for key:", key, "value:", val)
+	log.Println("Data found on redis, getting value for key:", key, "value:", val)
 	return val
 }

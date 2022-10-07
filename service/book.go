@@ -2,7 +2,7 @@ package service
 
 import (
 	"crypto/rand"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"time"
 	"unsafe"
 
@@ -11,17 +11,21 @@ import (
 
 const REDIS_BOOK_KEY = "book_felix_key"
 
-type Book struct {
-	Redis config.Redis
+type BookInterface interface {
+	ReadBook()
 }
 
-func NewBookService(redis config.Redis) Book {
+type Book struct {
+	Redis config.RedisInterface
+}
+
+func NewBookService(redis config.RedisInterface) BookInterface {
 	return Book{
 		Redis: redis,
 	}
 }
 
-func (b *Book) ReadBook() {
+func (b Book) ReadBook() {
 	data := b.Redis.Get(REDIS_BOOK_KEY)
 	if data != "" {
 		log.Println("Data fetch from redis:", data)

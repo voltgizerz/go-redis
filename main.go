@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/joho/godotenv"
 	"github.com/voltgizerz/go-redis/config"
@@ -17,8 +17,9 @@ func main() {
 
 	// init redis
 	redis := config.InitRedis()
-	
+
 	bookService := service.NewBookService(redis)
+	
 
 	bookService.ReadBook()
 }
